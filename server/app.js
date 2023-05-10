@@ -1,14 +1,27 @@
 const express = require('express');
-const path = require('path');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
+
+var indexRouter = require('../client/build/index');
 
 const app = express();
 
-const viewsPath = path.join(__dirname, 'views');
+const viewsPath = path.join(__dirname, '..','/client','/views');
+// console.log(path.join(__dirname, '..','/client','/build','index'));
 app.set('views', viewsPath);
 app.set('view engine', 'pug');
 
-app.get('/', (req, res) => {
-  res.render('index', { title: 'My App', message: 'Welcome to my app!' });
-});
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+
+path.join(__dirname, '..','/client','/views');
+// console.log(path.join(__dirname, '..','/client','/views'));
+
+//this make it look at the index file in buids for what to display in the '/' function
+app.use('/', indexRouter);
+
 
 module.exports = app;
