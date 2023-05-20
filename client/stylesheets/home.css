@@ -1,0 +1,45 @@
+body{
+    margin: 0;
+    padding: 0;
+
+    background-color: rgb(163, 142, 142);
+    display: flex;
+    flex-direction: row;
+}
+
+.left_content{
+    background-color: rgb(150, 157, 196);
+    display: flex;
+    flex-direction: column;
+
+    width: 200px;
+}
+
+.right_content{
+    background-color: rgb(122, 84, 84);
+    display: flex;
+    flex-direction: column;
+
+    width: 1300px;
+}
+
+.top_box{
+    background-color: rgb(197, 235, 255);
+    height: 500px;
+}
+
+.top_box_top{
+    background-color: rgb(255, 197, 251);
+    height: 100px;
+}
+
+.top_box_bottom{
+    background-color: rgb(255, 197, 251);
+    height: 100px;
+}
+
+.bottom_box{
+    background-color: rgb(154, 229, 235);
+    height: 500px;
+}
+

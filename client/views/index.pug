@@ -3,21 +3,21 @@ html
   head
     title= title
     //- script(src='../build/index.js')
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/index.css')
   body
     .box
         .box_content
             .box_header
                 h1 Login
             .box_body
-                form(action="login" method='POST')
+                form(action="/login" method='POST')
                     .box_body_usename
                         input(type="text" id="username" name="username")
                         label(for="username") Username
                     .box_body_password
                         input(type="text" id="password" name="password")
                         label(for="text") Password
-                    input(type="submit" value="Login")
+                    input(type="submit")
                         
                 P what is up
             .box_footer
