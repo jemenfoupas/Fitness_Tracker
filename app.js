@@ -3,7 +3,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./client/build/index');
+var indexRouter = require('./server/build/index');
+var homeRouter = require('./server/build/home');
 
 const app = express();
 
@@ -19,14 +20,35 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, '/client','/stylesheets')));
-// console.log(path.join(__dirname, '/client','/stylesheets'));
+app.use(express.static(path.join(__dirname, 'client','/javaScript')));
+console.log(path.join(__dirname, '/client','/javaScipt'));
 
 // path.join(__dirname, '..','/client','/views');
 // console.log(path.join(__dirname, '..','/client','/views'));
 
+// /// session stuff start ///
+// const session = require('express-session');
+// const SequelizeStore = require('connect-session-sequelize')(session.Store);
+// const sessionSecret = 'YourSessionSecret'; // Change this to a secure secret
+// const sequelize = require('./client/build/sequelize');
+
+// // Set up session middleware
+// app.use(session({
+//   secret: sessionSecret,
+//   resave: false,
+//   saveUninitialized: false,
+//   store: new SequelizeStore({
+//     db: sequelize, // Replace `sequelize` with your Sequelize instance
+//     checkExpirationInterval: 15 * 60 * 1000, // Cleanup expired sessions every 15 minutes
+//     expiration: 24 * 60 * 60 * 1000, // Expire sessions after 24 hours
+//   }),
+// }));
+// /// session stuff end ///
+
 // app.use(setUser, indexRouter);
 //this make it look at the index file in buids for what to display in the '/' function
 app.use('/', indexRouter);
+app.use('/home', homeRouter);
 
 
 

@@ -1,38 +1,15 @@
-import { title } from "process";
+import { getDatabase } from './database';
+import { getListOfUserByName } from './database';
 
 var express = require('express');
 var router = express.Router();
-
-const util = require('util');
-const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('mydb.sqlite3');
-const query = util.promisify(db.all.bind(db));
-const exec = util.promisify(db.exec.bind(db));
-
 var userId: number;
 const bcrypt = require('bcrypt');
 
 router.get('/', async function (req, res, next) {
   try {
-    const rows = await query(`SELECT name FROM sqlite_master WHERE type='table' AND name='user'`);
-
-    if (rows.length === 1) {
-      console.log("Table exists!");
-      res.render('index', { title: 'Fitness_Tracker', message: 'Welcome to my app!' });
-
-    } else {
-      console.log("Creating table and inserting some sample data");
-      await exec(`create table user (
-              user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-              user_name varchar(255) NOT NULL,
-              user_password varchar(255) NOT NULL
-               );
-                insert into user (user_name, user_password) values ('root','$2b$10$npR01AH6n9ZWBZ4U.K1nK.SOQpu0/Qsnx7Ir4FSm8snMIscZx3Siy');
-                insert into user (user_name, user_password) values ('root2','$2b$10$IBoZoC.LP6lQ8HBSwSa6dejiBEawXzA3dZolDKovrlCczydKczeUK');
-                insert into user (user_name, user_password) values ('root3','$2b$10$pRlBjbrMistvU1xIrfFIfeRZ1hNVUVUD1IuggtVO/sWYOY4dpTNyK');
-                insert into user (user_name, user_password) values ('root4','$2b$10$BS7BvP3nhgnkowdfBSy.K.QzqLFI266L3a.bsFu3WxsBD3a9beDx2');`);
-        res.render('index', { title: 'Fitness_Tracker', message: 'Welcome to my app!' });
-    }
+    getDatabase();
+    res.render('index', { title: 'Fitness_Tracker', message: 'Welcome to my app!' });
   } catch (err) {
     console.log("Getting error " + err);
     // exit(1);
@@ -40,23 +17,17 @@ router.get('/', async function (req, res, next) {
 });
 
 router.get('/home', function (req, res, next) {
-  console.log("");
-  console.log("in the home function");
-  console.log("userID: ", req.query.userId);
-  
-  res.render('home', {title: req.query.userId});
+  console.log("userID: ", userId);
+  res.render('home', {title: userId});
+
 });
 
 router.post('/login', async(req, res, next) => {
   console.log("")
   try {
+    const rows = await getListOfUserByName(req.body.username);
+    // console.log(rows);
 
-    const hashedPassword  = await bcrypt.hash(req.body.password, 10);
-
-    const rows = await query(`SELECT * FROM user WHERE user_name = '${req.body.username}';`);
-    console.log(rows);
-
-    
     if(rows.length > 0){
       rows.forEach(async function(row) {
 
