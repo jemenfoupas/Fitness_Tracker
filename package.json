@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./www",
-    "update1": "cd client && tsc --watch",
-    "update2": "cd client && tsc --watch"
+    "update": "tsc --watch"
   },
   "keywords": [],
   "author": "",

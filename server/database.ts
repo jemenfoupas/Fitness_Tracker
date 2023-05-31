@@ -159,6 +159,13 @@ export async function getDatabase(){
                 insert into program_exercise(program_id, exercise_id) values(15, 9);
                 insert into program_exercise(program_id, exercise_id) values(16, 3);
             `);
+
+            await exec(`
+                create table currentUser (
+                    id INTEGER PRIMARY KEY,
+                    user_id INTEGER
+                );`
+            );
                 
         } else {
             console.log("table a;ready exits");
@@ -183,7 +190,37 @@ export async function getListOfUserByName(name: String){
     }
 }
 
+export async function setUser(id: number){
 
+    // const hashedPassword  = await bcrypt.hash(req.body.password, 10); this is how to hass a value
+    try {
+        await exec(`
+            DELETE FROM currentUser
+        `);
+
+        await exec(`
+            insert into currentUser(user_id) values(${id});
+        `);
+
+        var rows = await query(`SELECT user_id FROM currentUser`);
+        console.log(rows);
+    } catch (err) {
+        console.log("Getting error " + err);
+    }
+}
+
+export async function getUser(){
+
+    // const hashedPassword  = await bcrypt.hash(req.body.password, 10); this is how to hass a value
+    try {
+        var rows = await query(`SELECT user_id FROM currentUser WHERE id = 1`);
+        // console.log(rows);
+        return rows;
+
+    } catch (err) {
+        console.log("Getting error " + err);
+    }
+}
 // module.exports = {
 //     getDatabase
 // }

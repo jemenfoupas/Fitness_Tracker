@@ -1,5 +1,6 @@
 import { getDatabase } from './database';
 import { getListOfUserByName } from './database';
+import { setUser } from './database';
 
 var express = require('express');
 var router = express.Router();
@@ -13,11 +14,13 @@ router.get('/', async function (req, res, next) {
   } catch (err) {
     console.log("Getting error " + err);
     // exit(1);
+    //fvnofnvod
   }
 });
 
 router.get('/home', function (req, res, next) {
-  console.log("userID: ", userId);
+
+  setUser(userId);
   res.render('home', {title: userId});
 
 });
@@ -36,12 +39,12 @@ router.post('/login', async(req, res, next) => {
         
         if(match){
   
-          console.log("the passwords match");
+          // console.log("the passwords match");
           userId = row.user_id;
   
           // Add the parameters to the URL using query parameters
-          const url = '/home?userId=' + encodeURIComponent(userId);
-  
+          // const url = '/home?userId=' + encodeURIComponent(userId);
+          const url = '/home';
           // Redirect to the new page
           res.redirect(url);
           // res.redirect('/');

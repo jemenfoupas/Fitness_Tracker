@@ -1,26 +1,43 @@
+import { getUser } from './database';
+
 var express = require('express');
-export var router = express.Router();
-
-
+var router = express.Router();
 
 var userId: number;
 
 router.get('/home', function (req, res, next) {
-    res.render('home', {title: userId});
-    // let top_box_bottom = document.getElementsByClassName("top_box_bottom");
-    // top_box_bottom.style.backgroundColor = "rgb(214, 67, 9)";
+  console.log("/home userID: ", userId);
 
-    // (top_box_bottom.querySelector('.top_box_bottom') as HTMLInputElement).value = " a vaule";
-   
-    // const workoutDiv = document.createElement('div');
-    // workoutDiv.innerHTML = "new content";
-    // top_box_bottom.appendChild(workoutDiv);
-  });
+  res.render('home', {title: userId});
+  // let top_box_bottom = document.getElementsByClassName("top_box_bottom");
+  // top_box_bottom.style.backgroundColor = "rgb(214, 67, 9)";
 
-  export function setUserId(id: number){
-    // userId = id;
-    console.log("in set function")
+  // (top_box_bottom.querySelector('.top_box_bottom') as HTMLInputElement).value = " a vaule";
+  
+  // const workoutDiv = document.createElement('div');
+  // workoutDiv.innerHTML = "new content";
+  // top_box_bottom.appendChild(workoutDiv);
+});
+
+router.get('/data', async function (req, res, next) {
+  console.log("getting data");
+
+  try {
+    const result = await getUser(); // Execute your SQL query and get the result
+
+    // Send the result as a JSON response
+    res.json(result);
+  } catch (error) {
+    console.error(error);
+    // Handle any errors and send an error response
+    res.status(500).send('Error fetching data');
   }
+});
 
-  // export default router;
-  module.exports = router;
+export function setUserId(id: any) {
+  userId = id;
+  // console.log("in set function")
+}
+
+// export default router;
+module.exports = router;

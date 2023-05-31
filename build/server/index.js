@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = require("./database");
 const database_2 = require("./database");
+const database_3 = require("./database");
 var express = require('express');
 var router = express.Router();
 var userId;
@@ -24,11 +25,12 @@ router.get('/', function (req, res, next) {
         catch (err) {
             console.log("Getting error " + err);
             // exit(1);
+            //fvnofnvod
         }
     });
 });
 router.get('/home', function (req, res, next) {
-    console.log("userID: ", userId);
+    (0, database_3.setUser)(userId);
     res.render('home', { title: userId });
 });
 router.post('/login', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -42,10 +44,11 @@ router.post('/login', (req, res, next) => __awaiter(void 0, void 0, void 0, func
                     console.log(row.user_id, row.user_name);
                     const match = yield comparePasswords(req.body.password, row.user_password);
                     if (match) {
-                        console.log("the passwords match");
+                        // console.log("the passwords match");
                         userId = row.user_id;
                         // Add the parameters to the URL using query parameters
-                        const url = '/home?userId=' + encodeURIComponent(userId);
+                        // const url = '/home?userId=' + encodeURIComponent(userId);
+                        const url = '/home';
                         // Redirect to the new page
                         res.redirect(url);
                         // res.redirect('/');

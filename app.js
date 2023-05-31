@@ -3,8 +3,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./server/build/index');
-var homeRouter = require('./server/build/home');
+var indexRouter = require('./build/server/index');
+var homeRouter = require('./build/server/home');
 
 const app = express();
 
@@ -20,8 +20,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, '/client','/stylesheets')));
-app.use(express.static(path.join(__dirname, 'client','/javaScript')));
-console.log(path.join(__dirname, '/client','/javaScipt'));
+app.use(express.static(path.join(__dirname, 'build','client','/typeScript')));
+// console.log(path.join(__dirname, '/client','/javaScipt'));
 
 // path.join(__dirname, '..','/client','/views');
 // console.log(path.join(__dirname, '..','/client','/views'));

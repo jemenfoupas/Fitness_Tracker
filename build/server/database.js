@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getListOfUserByName = exports.getDatabase = void 0;
+exports.getUser = exports.setUser = exports.getListOfUserByName = exports.getDatabase = void 0;
 var express = require('express');
 var router = express.Router();
 const util = require('util');
@@ -155,6 +155,11 @@ function getDatabase() {
                 insert into program_exercise(program_id, exercise_id) values(15, 9);
                 insert into program_exercise(program_id, exercise_id) values(16, 3);
             `);
+                yield exec(`
+                create table currentUser (
+                    id INTEGER PRIMARY KEY,
+                    user_id INTEGER
+                );`);
             }
             else {
                 console.log("table a;ready exits");
@@ -181,6 +186,39 @@ function getListOfUserByName(name) {
     });
 }
 exports.getListOfUserByName = getListOfUserByName;
+function setUser(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        // const hashedPassword  = await bcrypt.hash(req.body.password, 10); this is how to hass a value
+        try {
+            yield exec(`
+            DELETE FROM currentUser
+        `);
+            yield exec(`
+            insert into currentUser(user_id) values(${id});
+        `);
+            var rows = yield query(`SELECT user_id FROM currentUser`);
+            console.log(rows);
+        }
+        catch (err) {
+            console.log("Getting error " + err);
+        }
+    });
+}
+exports.setUser = setUser;
+function getUser() {
+    return __awaiter(this, void 0, void 0, function* () {
+        // const hashedPassword  = await bcrypt.hash(req.body.password, 10); this is how to hass a value
+        try {
+            var rows = yield query(`SELECT user_id FROM currentUser WHERE id = 1`);
+            // console.log(rows);
+            return rows;
+        }
+        catch (err) {
+            console.log("Getting error " + err);
+        }
+    });
+}
+exports.getUser = getUser;
 // module.exports = {
 //     getDatabase
 // }
