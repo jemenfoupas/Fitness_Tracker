@@ -14,7 +14,6 @@ const database_2 = require("./database");
 const database_3 = require("./database");
 var express = require('express');
 var router = express.Router();
-var userId;
 const bcrypt = require('bcrypt');
 router.get('/', function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -30,12 +29,12 @@ router.get('/', function (req, res, next) {
     });
 });
 router.get('/home', function (req, res, next) {
-    (0, database_3.setUser)(userId);
-    res.render('home', { title: userId });
+    res.render('home');
 });
 router.post('/login', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("");
     try {
+        // console.log(req.body.storedValue);
         const rows = yield (0, database_2.getListOfUserByName)(req.body.username);
         // console.log(rows);
         if (rows.length > 0) {
@@ -44,14 +43,8 @@ router.post('/login', (req, res, next) => __awaiter(void 0, void 0, void 0, func
                     console.log(row.user_id, row.user_name);
                     const match = yield comparePasswords(req.body.password, row.user_password);
                     if (match) {
-                        // console.log("the passwords match");
-                        userId = row.user_id;
-                        // Add the parameters to the URL using query parameters
-                        // const url = '/home?userId=' + encodeURIComponent(userId);
-                        const url = '/home';
-                        // Redirect to the new page
-                        res.redirect(url);
-                        // res.redirect('/');
+                        (0, database_3.setUser)(req.body.storedValue, row.user_id);
+                        res.redirect('/home');
                     }
                     else {
                         console.log("password is wrong");
@@ -66,7 +59,7 @@ router.post('/login', (req, res, next) => __awaiter(void 0, void 0, void 0, func
         }
     }
     catch (err) {
-        console.log("Getting error " + err);
+        console.log("Getting error in /login" + err);
         res.render('index', { title: 'Fitness_Tracker', message: 'Welcome to my app!' });
     }
 }));

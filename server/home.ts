@@ -1,11 +1,12 @@
-import { getUser } from './database';
+// import { getUser } from './database';
+import { getUserRoutines } from './database';
 
 var express = require('express');
 var router = express.Router();
 
-var userId: number;
+// var userId: number;
 
-router.get('/home', function (req, res, next) {
+router.get('/home', function (req: any, res: any, next: any) {
   console.log("/home userID: ", userId);
 
   res.render('home', {title: userId});
@@ -19,11 +20,11 @@ router.get('/home', function (req, res, next) {
   // top_box_bottom.appendChild(workoutDiv);
 });
 
-router.get('/data', async function (req, res, next) {
+router.get('/data', async function (req: any, res: any, next: any) {
   console.log("getting data");
-
+  // console.log(req.query.storedValue);
   try {
-    const result = await getUser(); // Execute your SQL query and get the result
+    const result = await getUserRoutines(req.query.storedValue); // Execute your SQL query and get the result
 
     // Send the result as a JSON response
     res.json(result);

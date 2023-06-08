@@ -323,3 +323,7 @@ insert into program_exercise(program_id, exercise_id) value(69, 53);
 insert into program_exercise(program_id, exercise_id) value(70, 61);
 insert into program_exercise(program_id, exercise_id) value(71, 53);
 insert into program_exercise(program_id, exercise_id) value(72, 61);
+
+--
+insert into currentUser(sessionKey, user_id) values("abcd", 1);
+insert into currentUser(sessionKey, user_id) values("efgh", 2);

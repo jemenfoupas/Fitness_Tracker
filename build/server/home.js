@@ -10,10 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.setUserId = void 0;
+// import { getUser } from './database';
 const database_1 = require("./database");
 var express = require('express');
 var router = express.Router();
-var userId;
+// var userId: number;
 router.get('/home', function (req, res, next) {
     console.log("/home userID: ", userId);
     res.render('home', { title: userId });
@@ -27,8 +28,9 @@ router.get('/home', function (req, res, next) {
 router.get('/data', function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log("getting data");
+        // console.log(req.query.storedValue);
         try {
-            const result = yield (0, database_1.getUser)(); // Execute your SQL query and get the result
+            const result = yield (0, database_1.getUserRoutines)(req.query.storedValue); // Execute your SQL query and get the result
             // Send the result as a JSON response
             res.json(result);
         }

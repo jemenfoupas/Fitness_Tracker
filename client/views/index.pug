@@ -2,7 +2,7 @@ doctype html
 html
   head
     title= title
-    //- script(src='../build/index.js')
+    script(src='index.js')
     link(rel='stylesheet', href='/index.css')
   body
     .box
@@ -17,7 +17,7 @@ html
                     .box_body_password
                         input(type="text" id="password" name="password")
                         label(for="text") Password
+                        input(type="hidden" name="storedValue" id="storedValue")
                     input(type="submit")
                         
-                P what is up
             .box_footer

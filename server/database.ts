@@ -163,19 +163,20 @@ export async function getDatabase(){
             await exec(`
                 create table currentUser (
                     id INTEGER PRIMARY KEY,
+                    sessionKey VARCHAR(255) NOT NULL,
                     user_id INTEGER
-                );`
-            );
+                );
+            `);
                 
         } else {
-            console.log("table a;ready exits");
+            console.log("table already exits");
         }
 
         rows = await query(`SELECT name FROM sqlite_master WHERE type='table'`);
         console.log(rows);
         console.log("rows size:", rows.length);
     } catch (err) {
-        console.log("Getting error " + err);
+        console.log("Getting error in getDatabase()" + err);
     }
     
 }
@@ -186,41 +187,50 @@ export async function getListOfUserByName(name: String){
     try {
         return await query(`SELECT * FROM user WHERE user_name = '${name}';`);
     } catch (err) {
-        console.log("Getting error " + err);
+        console.log("Getting error in getListOfUserByName()" + err);
     }
 }
 
-export async function setUser(id: number){
+export async function setUser(sessionKey: String, id: number){
 
     // const hashedPassword  = await bcrypt.hash(req.body.password, 10); this is how to hass a value
     try {
         await exec(`
             DELETE FROM currentUser
         `);
-
         await exec(`
-            insert into currentUser(user_id) values(${id});
+            insert into currentUser(sessionKey, user_id) values("${sessionKey}", "${id}");
         `);
 
-        var rows = await query(`SELECT user_id FROM currentUser`);
-        console.log(rows);
+        // var rows = await query(`SELECT user_id FROM currentUser`);
+        // console.log(rows);
     } catch (err) {
-        console.log("Getting error " + err);
+        console.log("Getting error in setUser()" + err);
     }
 }
 
-export async function getUser(){
-
-    // const hashedPassword  = await bcrypt.hash(req.body.password, 10); this is how to hass a value
+export async function getUser(sessionKey: String){
     try {
-        var rows = await query(`SELECT user_id FROM currentUser WHERE id = 1`);
-        // console.log(rows);
+        var rows = await query(`SELECT sessionKey FROM currentUser WHERE sessionKey = ${sessionKey}`);
         return rows;
 
     } catch (err) {
-        console.log("Getting error " + err);
+        console.log("Getting error in getUser()" + err);
     }
 }
-// module.exports = {
-//     getDatabase
-// }
+
+export async function getUserRoutines(sessionKey: String){
+    try {
+        var rows = await query(`
+            select routine.* 
+            from currentUser 
+            INNER JOIN routine
+            ON routine.user_id = currentUser.user_id 
+            where currentUser.sessionKey = "${sessionKey}"
+        `);
+        return rows;
+
+    } catch (err) {
+        console.log("Getting error in getUserRoutines()" + err);
+    }
+}

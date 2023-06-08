@@ -3,6 +3,7 @@ CREATE DATABASE IF NOT EXISTS account;
 USE account;
 
 -- Tables to drop
+DROP TABLE IF EXISTS currentUser;
 DROP TABLE IF EXISTS program_exercise;
 DROP TABLE IF EXISTS exercise;
 DROP TABLE IF EXISTS program;
@@ -70,4 +71,10 @@ CREATE TABLE  program_exercise (
     
     exercise_id INTEGER,
     FOREIGN KEY(exercise_id) REFERENCES exercise(exercise_id)
+);
+
+create table currentUser (
+	id INTEGER PRIMARY KEY AUTO_INCREMENT,
+	sessionKey VARCHAR(255) NOT NULL,
+	user_id INTEGER NOT NULL
 );

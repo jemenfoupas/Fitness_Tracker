@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUser = exports.setUser = exports.getListOfUserByName = exports.getDatabase = void 0;
+exports.getUserRoutines = exports.getUser = exports.setUser = exports.getListOfUserByName = exports.getDatabase = void 0;
 var express = require('express');
 var router = express.Router();
 const util = require('util');
@@ -158,18 +158,20 @@ function getDatabase() {
                 yield exec(`
                 create table currentUser (
                     id INTEGER PRIMARY KEY,
+                    sessionKey VARCHAR(255) NOT NULL,
                     user_id INTEGER
-                );`);
+                );
+            `);
             }
             else {
-                console.log("table a;ready exits");
+                console.log("table already exits");
             }
             rows = yield query(`SELECT name FROM sqlite_master WHERE type='table'`);
             console.log(rows);
             console.log("rows size:", rows.length);
         }
         catch (err) {
-            console.log("Getting error " + err);
+            console.log("Getting error in getDatabase()" + err);
         }
     });
 }
@@ -181,12 +183,12 @@ function getListOfUserByName(name) {
             return yield query(`SELECT * FROM user WHERE user_name = '${name}';`);
         }
         catch (err) {
-            console.log("Getting error " + err);
+            console.log("Getting error in getListOfUserByName()" + err);
         }
     });
 }
 exports.getListOfUserByName = getListOfUserByName;
-function setUser(id) {
+function setUser(sessionKey, id) {
     return __awaiter(this, void 0, void 0, function* () {
         // const hashedPassword  = await bcrypt.hash(req.body.password, 10); this is how to hass a value
         try {
@@ -194,31 +196,44 @@ function setUser(id) {
             DELETE FROM currentUser
         `);
             yield exec(`
-            insert into currentUser(user_id) values(${id});
+            insert into currentUser(sessionKey, user_id) values("${sessionKey}", "${id}");
         `);
-            var rows = yield query(`SELECT user_id FROM currentUser`);
-            console.log(rows);
+            // var rows = await query(`SELECT user_id FROM currentUser`);
+            // console.log(rows);
         }
         catch (err) {
-            console.log("Getting error " + err);
+            console.log("Getting error in setUser()" + err);
         }
     });
 }
 exports.setUser = setUser;
-function getUser() {
+function getUser(sessionKey) {
     return __awaiter(this, void 0, void 0, function* () {
-        // const hashedPassword  = await bcrypt.hash(req.body.password, 10); this is how to hass a value
         try {
-            var rows = yield query(`SELECT user_id FROM currentUser WHERE id = 1`);
-            // console.log(rows);
+            var rows = yield query(`SELECT sessionKey FROM currentUser WHERE sessionKey = ${sessionKey}`);
             return rows;
         }
         catch (err) {
-            console.log("Getting error " + err);
+            console.log("Getting error in getUser()" + err);
         }
     });
 }
 exports.getUser = getUser;
-// module.exports = {
-//     getDatabase
-// }
+function getUserRoutines(sessionKey) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            var rows = yield query(`
+            select routine.* 
+            from currentUser 
+            INNER JOIN routine
+            ON routine.user_id = currentUser.user_id 
+            where currentUser.sessionKey = "${sessionKey}"
+        `);
+            return rows;
+        }
+        catch (err) {
+            console.log("Getting error in getUserRoutines()" + err);
+        }
+    });
+}
+exports.getUserRoutines = getUserRoutines;

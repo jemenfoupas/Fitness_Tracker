@@ -4,10 +4,9 @@ import { setUser } from './database';
 
 var express = require('express');
 var router = express.Router();
-var userId: number;
 const bcrypt = require('bcrypt');
 
-router.get('/', async function (req, res, next) {
+router.get('/', async function (req: any, res: any, next: any) {
   try {
     getDatabase();
     res.render('index', { title: 'Fitness_Tracker', message: 'Welcome to my app!' });
@@ -18,36 +17,27 @@ router.get('/', async function (req, res, next) {
   }
 });
 
-router.get('/home', function (req, res, next) {
-
-  setUser(userId);
-  res.render('home', {title: userId});
+router.get('/home', function (req: any, res: any, next: any) {
+  res.render('home');
 
 });
 
-router.post('/login', async(req, res, next) => {
+router.post('/login', async(req: any, res: any, next: any) => {
   console.log("")
   try {
+    // console.log(req.body.storedValue);
     const rows = await getListOfUserByName(req.body.username);
     // console.log(rows);
 
     if(rows.length > 0){
-      rows.forEach(async function(row) {
+      rows.forEach(async function(row: any) {
 
         console.log(row.user_id, row.user_name);
         const match = await comparePasswords(req.body.password, row.user_password);
         
         if(match){
-  
-          // console.log("the passwords match");
-          userId = row.user_id;
-  
-          // Add the parameters to the URL using query parameters
-          // const url = '/home?userId=' + encodeURIComponent(userId);
-          const url = '/home';
-          // Redirect to the new page
-          res.redirect(url);
-          // res.redirect('/');
+          setUser(req.body.storedValue, row.user_id);
+          res.redirect('/home');
   
         } else{
           console.log("password is wrong");
@@ -58,15 +48,13 @@ router.post('/login', async(req, res, next) => {
       console.log("something went wrong");
       res.redirect('/');
     }
-    
-    
   } catch (err) {
-    console.log("Getting error " + err);
+    console.log("Getting error in /login" + err);
     res.render('index', { title: 'Fitness_Tracker', message: 'Welcome to my app!' });
   }
 });
 
-async function comparePasswords(plainTextPassword, hashedPassword) {
+async function comparePasswords(plainTextPassword: String, hashedPassword: String) {
   try {
     const match = await bcrypt.compare(plainTextPassword, hashedPassword);
     if (match) {
