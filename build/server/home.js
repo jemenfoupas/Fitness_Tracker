@@ -16,8 +16,8 @@ var express = require('express');
 var router = express.Router();
 // var userId: number;
 router.get('/home', function (req, res, next) {
-    console.log("/home userID: ", userId);
-    res.render('home', { title: userId });
+    // console.log("/home userID: ", userId);
+    res.render('home');
     // let top_box_bottom = document.getElementsByClassName("top_box_bottom");
     // top_box_bottom.style.backgroundColor = "rgb(214, 67, 9)";
     // (top_box_bottom.querySelector('.top_box_bottom') as HTMLInputElement).value = " a vaule";
@@ -42,7 +42,7 @@ router.get('/data', function (req, res, next) {
     });
 });
 function setUserId(id) {
-    userId = id;
+    // userId = id;
     // console.log("in set function")
 }
 exports.setUserId = setUserId;

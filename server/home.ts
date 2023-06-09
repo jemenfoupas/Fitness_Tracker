@@ -7,9 +7,9 @@ var router = express.Router();
 // var userId: number;
 
 router.get('/home', function (req: any, res: any, next: any) {
-  console.log("/home userID: ", userId);
+  // console.log("/home userID: ", userId);
 
-  res.render('home', {title: userId});
+  res.render('home');
   // let top_box_bottom = document.getElementsByClassName("top_box_bottom");
   // top_box_bottom.style.backgroundColor = "rgb(214, 67, 9)";
 
@@ -36,7 +36,7 @@ router.get('/data', async function (req: any, res: any, next: any) {
 });
 
 export function setUserId(id: any) {
-  userId = id;
+  // userId = id;
   // console.log("in set function")
 }
 
