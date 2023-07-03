@@ -1,0 +1,21 @@
+doctype html
+html
+  head
+    title= title
+    script(src='routine.js')
+    link(rel='stylesheet', href='/routine.css')
+  body
+    .left_content
+    .right_content
+      .top_box
+        #top_box_top
+            label(for="start_date") start date
+            input(type="date" id="start_date" name="start_date")
+
+            label(for="end_date") end date
+            input(type="date" id="end_date" name="end_date")
+            
+        #top_box_bottom
+          p top_box_bottom
+      .bottom_box
+        p bottom_box

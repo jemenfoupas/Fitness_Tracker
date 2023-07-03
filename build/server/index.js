@@ -15,6 +15,8 @@ const database_3 = require("./database");
 var express = require('express');
 var router = express.Router();
 const bcrypt = require('bcrypt');
+const keylenght = 50;
+let sessionKeys;
 router.get('/', function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -23,13 +25,16 @@ router.get('/', function (req, res, next) {
         }
         catch (err) {
             console.log("Getting error " + err);
-            // exit(1);
-            //fvnofnvod
         }
     });
 });
 router.get('/home', function (req, res, next) {
-    res.render('home');
+    let storedValues = {
+        sessionKey: sessionKeys
+    };
+    console.log("in home", sessionKeys);
+    // var storedValue = req.query.storedValue;
+    res.render('home', { storedValues });
 });
 router.post('/login', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("");
@@ -43,7 +48,11 @@ router.post('/login', (req, res, next) => __awaiter(void 0, void 0, void 0, func
                     console.log(row.user_id, row.user_name);
                     const match = yield comparePasswords(req.body.password, row.user_password);
                     if (match) {
-                        (0, database_3.setUser)(req.body.storedValue, row.user_id);
+                        let sessionKey = generateString(keylenght);
+                        sessionKeys = sessionKey;
+                        console.log("in log", sessionKey);
+                        (0, database_3.setUser)(sessionKey, row.user_id);
+                        // res.redirect('/home');
                         res.redirect('/home');
                     }
                     else {
@@ -63,6 +72,17 @@ router.post('/login', (req, res, next) => __awaiter(void 0, void 0, void 0, func
         res.render('index', { title: 'Fitness_Tracker', message: 'Welcome to my app!' });
     }
 }));
+// program to generate random strings
+// declare all characters
+const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+function generateString(length) {
+    let result = ' ';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
 function comparePasswords(plainTextPassword, hashedPassword) {
     return __awaiter(this, void 0, void 0, function* () {
         try {

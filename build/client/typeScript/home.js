@@ -10,20 +10,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 function onHomePageLoad() {
     return __awaiter(this, void 0, void 0, function* () {
-        let storedValue = localStorage.getItem('sessionKey');
-        const url = `/home/data?storedValue=${encodeURIComponent(storedValue)}`;
+        // let storedValue :string = sessionStorage.getItem('sessionKey')!;
+        // console.log(sessionStorage.getItem('sessionKey')!)
+        // console.log("in js", storedValue.sessionKey);
+        let sessionKey = storedValue.sessionKey;
+        sessionStorage.setItem("sessionKey", sessionKey);
+        const url = `/home/data?storedValue=${encodeURIComponent(sessionKey)}`;
         var result = yield fetch(url);
         var jsonData = yield result.json();
-        console.log(jsonData);
-        console.log(jsonData[1]);
-        console.log(jsonData[1].end_date);
         // getting user workout routines
         let top_box_bottom = document.getElementById("top_box_bottom");
         if (top_box_bottom != null) {
             // top_box_bottom.innerHTML = '';
             for (let i = 0; i < jsonData.length; i++) {
                 const form = document.createElement('form');
-                form.action = '/';
+                form.action = '/home/routine';
                 form.method = 'get';
                 form.id = 'myForm';
                 const routinesDiv = document.createElement('div');
@@ -31,22 +32,14 @@ function onHomePageLoad() {
                 const startDateDiv = document.createElement('div');
                 const endDateDiv = document.createElement('div');
                 const inputField = document.createElement('input');
+                // inputField.type = 'text';
                 inputField.type = 'hidden';
+                inputField.id = 'fieldName';
                 inputField.name = 'fieldName';
                 inputField.value = jsonData[i].routine_id;
                 nameDiv.innerText = jsonData[i].routine_name;
                 startDateDiv.innerText = jsonData[i].start_date;
                 endDateDiv.innerText = jsonData[i].end_date;
-                // // routinesDiv.innerHTML += '<a href="https://www.w3docs.com/"> ';
-                // var link = document.createElement('a');
-                // link.href = 'https://www.w3docs.com/';
-                // link.appendChild(nameDiv);
-                // link.appendChild(startDateDiv);
-                // link.appendChild(endDateDiv);
-                // routinesDiv.appendChild(link);
-                // // routinesDiv.innerHTML +="</a>"; 
-                // routinesDiv.classList.add('routinesDiv');
-                // top_box_bottom.appendChild(routinesDiv);
                 form.appendChild(inputField);
                 form.appendChild(nameDiv);
                 form.appendChild(startDateDiv);

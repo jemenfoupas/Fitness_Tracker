@@ -193,7 +193,7 @@ function setUser(sessionKey, id) {
         // const hashedPassword  = await bcrypt.hash(req.body.password, 10); this is how to hass a value
         try {
             yield exec(`
-            DELETE FROM currentUser
+            DELETE FROM currentUser WHERE user_id = "${id}"
         `);
             yield exec(`
             insert into currentUser(sessionKey, user_id) values("${sessionKey}", "${id}");

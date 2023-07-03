@@ -5,6 +5,9 @@ import { setUser } from './database';
 var express = require('express');
 var router = express.Router();
 const bcrypt = require('bcrypt');
+const keylenght: number = 50;
+
+let sessionKeys: string;
 
 router.get('/', async function (req: any, res: any, next: any) {
   try {
@@ -12,14 +15,17 @@ router.get('/', async function (req: any, res: any, next: any) {
     res.render('index', { title: 'Fitness_Tracker', message: 'Welcome to my app!' });
   } catch (err) {
     console.log("Getting error " + err);
-    // exit(1);
-    //fvnofnvod
   }
 });
 
 router.get('/home', function (req: any, res: any, next: any) {
-  res.render('home');
+  let storedValues = {
+    sessionKey: sessionKeys
+  }
 
+  console.log("in home", sessionKeys);
+  // var storedValue = req.query.storedValue;
+  res.render('home', {storedValues});
 });
 
 router.post('/login', async(req: any, res: any, next: any) => {
@@ -36,9 +42,13 @@ router.post('/login', async(req: any, res: any, next: any) => {
         const match = await comparePasswords(req.body.password, row.user_password);
         
         if(match){
-          setUser(req.body.storedValue, row.user_id);
+          let sessionKey = generateString(keylenght);
+          sessionKeys = sessionKey;
+          console.log("in log", sessionKey);
+          setUser(sessionKey, row.user_id);
+          // res.redirect('/home');
           res.redirect('/home');
-  
+
         } else{
           console.log("password is wrong");
           res.redirect('/');
@@ -53,6 +63,20 @@ router.post('/login', async(req: any, res: any, next: any) => {
     res.render('index', { title: 'Fitness_Tracker', message: 'Welcome to my app!' });
   }
 });
+
+
+// program to generate random strings
+// declare all characters
+const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+function generateString(length: number) {
+    let result = ' ';
+    const charactersLength = characters.length;
+    for ( let i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
+}
 
 async function comparePasswords(plainTextPassword: String, hashedPassword: String) {
   try {
